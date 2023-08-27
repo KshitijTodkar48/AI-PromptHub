@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import PromptCard from "./PromptCard";
+import Image from "next/image";
 
 const PromptCardList = ({ data , handleTagClick }) => {
    return (
@@ -19,6 +20,7 @@ const PromptCardList = ({ data , handleTagClick }) => {
 }
 
 const Feed = () => {
+  const [isLoading , setisLoading] = useState(true);
   const [allPosts, setAllPosts] = useState([]);
   const [searchedPosts, setSearchedPosts] = useState([]);
   const [searchText, setSearchText] = useState('') ;
@@ -30,6 +32,7 @@ const Feed = () => {
       const response = await fetch("/api/prompt") ;
       const data = await response.json() ;
       setAllPosts(data) ;
+      setisLoading(false) ;
     }
     // Calling on the first render
     fetchPosts() ;
@@ -65,6 +68,19 @@ const Feed = () => {
      const result = filterPrompts(tagName) ;
      setSearchedPosts(result) ;
   }
+
+  if(isLoading)
+    return <>
+      <div className='w-full flex-center mt-20'>
+        <Image
+          src='assets/icons/loader.svg'
+          width={50}
+          height={50}
+          alt='loader'
+          className='object-contain'
+        />
+      </div>
+    </>
 
   return (
     <section className="feed">
